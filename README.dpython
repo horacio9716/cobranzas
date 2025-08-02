@@ -1,0 +1,25 @@
+import os
+from datetime import datetime
+
+# Datos del repositorio
+REPO = "https://github.com/horacio9716/cobranzas.git"
+COMMIT_MSG = f"Auto update {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+
+# Paso 1: Inicializa git si no está
+if not os.path.exists(".git"):
+    os.system("git init")
+    os.system(f"git remote add origin {REPO}")
+
+# Paso 2: Agrega todos los archivos
+os.system("git add .")
+
+# Paso 3: Crea el commit
+os.system(f'git commit -m "{COMMIT_MSG}"')
+
+# Paso 4: Sube al repositorio
+token = os.environ.get("GITHUB_TOKEN")
+if not token:
+    print("⚠️  No se encontró el token. Usá: export GITHUB_TOKEN='tu_token'")
+else:
+    repo_url = REPO.replace("https://", f"https://{token}@")
+    os.system(f"git push {repo_url} main")
